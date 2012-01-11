@@ -1,0 +1,7 @@
+h1. Garnet
+
+Lightweight rubygem server implementation
+
+bq. use Garnet::Api::Gems
+
+
