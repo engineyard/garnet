@@ -14,4 +14,7 @@ Gem::Specification.new do |gem|
   gem.name          = "garnet"
   gem.require_paths = ["lib"]
   gem.version       = Garnet::VERSION
+
+  gem.add_runtime_dependency "sinatra"
+  gem.add_runtime_dependency "dm-core"
 end

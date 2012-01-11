@@ -1,5 +1,11 @@
 require "garnet/version"
 
 module Garnet
-  # Your code goes here...
+  autoload :Api, 'garnet/api'
 end
+
+
+require 'dm-core'
+require 'garnet/gem'
+require 'garnet/gem_version'
+

@@ -1,4 +1,10 @@
 source 'http://rubygems.org'
 
-# Specify your gem's dependencies in garnet.gemspec
 gemspec
+
+group :test do
+  gem 'rack-client'
+  gem 'rspec'
+  gem 'dm-sqlite-adapter'
+  gem 'dm-migrations'
+end
