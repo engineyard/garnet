@@ -17,4 +17,5 @@ Gem::Specification.new do |gem|
 
   gem.add_runtime_dependency "sinatra"
   gem.add_runtime_dependency "dm-core"
+  gem.add_runtime_dependency "dm-serializer"
 end

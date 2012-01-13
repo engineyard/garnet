@@ -7,5 +7,7 @@ end
 
 require 'dm-core'
 require 'garnet/gem'
-require 'garnet/gem_version'
+require 'garnet/cut'
+require 'garnet/author'
+require 'garnet/dependency'
 
