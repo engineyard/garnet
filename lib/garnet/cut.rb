@@ -5,9 +5,9 @@ class Garnet::Cut
   property :number, String
   property :downloads, Integer, :default => 0
   property :info, String
+  property :authors, Json
 
   belongs_to :stone
-  has n, :authors
   has n, :dependencies
 
   def self.most_recent

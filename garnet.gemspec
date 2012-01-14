@@ -18,4 +18,6 @@ Gem::Specification.new do |gem|
   gem.add_runtime_dependency "sinatra"
   gem.add_runtime_dependency "dm-core"
   gem.add_runtime_dependency "dm-serializer"
+  gem.add_runtime_dependency "dm-validations"
+  gem.add_runtime_dependency "dm-types"
 end

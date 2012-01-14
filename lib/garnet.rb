@@ -6,8 +6,13 @@ end
 
 
 require 'dm-core'
-require 'garnet/gem'
+require 'dm-validations'
+require 'dm-types'
+
+require 'garnet/stone'
 require 'garnet/cut'
-require 'garnet/author'
+require 'garnet/user'
+require 'garnet/ownership'
 require 'garnet/dependency'
 
+DataMapper.finalize

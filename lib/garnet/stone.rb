@@ -16,12 +16,21 @@ class Garnet::Stone
 
   has n, :cuts
   alias_method :versions, :cuts
+  has n, :ownerships
+  has n, :owners, :through => :ownerships, :via => :user, :model => "Garnet::User"
 
-  def self.push(gem_io)
+  validates_uniqueness_of :name
+
+  def self.from(name)
+    Garnet::Stone.first(:name => name)
+  end
+
+  def self.push(gem_io, owners)
     spec = Gem::Package.open gem_io, "r", nil do |pkg|
       pkg.metadata
     end
     stone = first_or_create(:name => spec.name)
+    stone.update(:owners => owners)
     stone.cuts.create(:number => spec.version)
   end
 

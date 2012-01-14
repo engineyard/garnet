@@ -1,14 +1,20 @@
 require 'spec_helper'
 
 describe Garnet::Api::Gems do
+  let(:gem_name){ "sinatra" } # it works cause its a dependency
+  let(:gem_spec) { Gem::Specification.find_by_name(gem_name) }
+  let(:gem) { File.read(gem_spec.cache_file) }
+  let(:user) { Garnet::User.create(:email => "lane.joshlane@gmail.com") }
   let(:client) do
     Garnet::Api::Gems.set :show_exceptions, false
     Garnet::Api::Gems.set :raise_errors, true
-    Rack::Client.new { run Garnet::Api::Gems }
-  end
-  let(:gem_name){ "sinatra" } # it works cause its a dependency
-  let(:gem) do
-    File.read(Gem::Specification.find_by_name(gem_name).cache_file)
+    token = user.token
+    Rack::Client.new do 
+      use Rack::Config do |env|
+        env['HTTP_AUTHORIZATION'] = token
+      end
+      run Garnet::Api::Gems
+    end
   end
 
   it "should create a gem" do
@@ -25,5 +31,12 @@ describe Garnet::Api::Gems do
     response = client.get("/api/v1/gems")
     ggem = Garnet::Stone.last
     MultiJson.decode(response.body).should == [ggem.payload]
+  end
+
+  it "should get a gems owners" do
+    response = client.post("/api/v1/gems", { 'Content-Type' => 'application/octet-stream' }, gem)
+    response = client.get("/api/v1/gems/#{gem_name}/owners")
+    response.should be_successful
+    MultiJson.decode(response.body).should == [{"email" => user.email}]
   end
 end
