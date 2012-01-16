@@ -16,6 +16,10 @@ class Garnet::Api::Gems < Sinatra::Base
 #GET    /api/v1/gems/latest(.:format)                          {:format=>/json|xml|yaml/, :action=>"latest", :controller=>"api/v1/rubygems"}
 #GET    /api/v1/gems/just_updated(.:format)                    {:format=>/json|xml|yaml/, :action=>"just_updated", :controller=>"api/v1/rubygems"}
 #POST   /api/v1/gems/:rubygem_id/owners(.:format)              {:format=>/json|xml|yaml/, :rubygem_id=>/[A-Za-z0-9\.\-_]+?/, :action=>"create", :controller=>"api/v1/owners"}
+  post "/api/v1/gems/:name/owners/?.?:format?" do |name, format|
+    ownership = Garnet::Stone.from(name).ownerships.first_or_create(:user => Garnet::User.first(:email => params[:email]))
+    "Owner added successfully"
+  end
 #GET    /api/v1/gems/:rubygem_id/owners(.:format)              {:format=>/json|xml|yaml/, :rubygem_id=>/[A-Za-z0-9\.\-_]+?/, :action=>"show", :controller=>"api/v1/owners"}
   get "/api/v1/gems/:name/owners/?.?:format?" do |name, format|
     stone = Garnet::Stone.from(name)
@@ -41,5 +45,6 @@ class Garnet::Api::Gems < Sinatra::Base
   end
 #GET    /api/v1/gems/:id(.:format)                             {:id=>/[A-Za-z0-9\.\-_]+?/, :format=>/json|xml|yaml/, :action=>"show", :controller=>"api/v1/rubygems"}
   get "/api/v1/gems/:id.:format" do |id, format|
+    respond_with(Garnet::Stone.from(id))
   end
 end

@@ -4,7 +4,7 @@ describe Garnet::Api::Gems do
   let(:gem_name){ "sinatra" } # it works cause its a dependency
   let(:gem_spec) { Gem::Specification.find_by_name(gem_name) }
   let(:gem) { File.read(gem_spec.cache_file) }
-  let(:user) { Garnet::User.create(:email => "lane.joshlane@gmail.com") }
+  let(:user) { Garnet::User.make.tap{|u| u.save} }
   let(:client) do
     Garnet::Api::Gems.set :show_exceptions, false
     Garnet::Api::Gems.set :raise_errors, true
@@ -33,10 +33,21 @@ describe Garnet::Api::Gems do
     MultiJson.decode(response.body).should == [ggem.payload]
   end
 
-  it "should get a gems owners" do
-    response = client.post("/api/v1/gems", { 'Content-Type' => 'application/octet-stream' }, gem)
-    response = client.get("/api/v1/gems/#{gem_name}/owners")
-    response.should be_successful
-    MultiJson.decode(response.body).should == [{"email" => user.email}]
+  describe "#owners" do
+    before(:each) { client.post("/api/v1/gems", { 'Content-Type' => 'application/octet-stream' }, gem) }
+    it "should get owners" do
+      response = client.get("/api/v1/gems/#{gem_name}/owners")
+      response.should be_successful
+      MultiJson.decode(response.body).should == [{"email" => user.email}]
+    end
+
+    it "should add an owner" do
+      new_user = Garnet::User.make!
+      response = client.post("/api/v1/gems/#{gem_name}/owners", {}, {:email => new_user.email})
+      response.should be_successful
+      response.body.should == "Owner added successfully"
+      response = client.get("/api/v1/gems/#{gem_name}/owners")
+      MultiJson.decode(response.body).map{|i| i["email"]}.sort.should == [new_user.email, user.email].sort
+    end
   end
 end

@@ -4,7 +4,7 @@ class Garnet::Stone
   HOST="http://garnet.dev/" # FIXME: need to dynamically set this based on the request
 
   property :id, Serial
-  property :name, String
+  property :name, String, :unique => true
   
   # Links
   property :homepage_uri, String
